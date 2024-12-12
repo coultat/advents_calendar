@@ -1,29 +1,29 @@
-from random import randint
-#import numpy as np
+from random import SystemRandom
 
 VERT = 10
 HORI = 10
 
 
 def _populate_cells() -> list[int]:
-    return [randint(0, 1) for _ in range(10)]
+    return [SystemRandom().randint(0, 1) for _ in range(10)]
 
 
 def _create_grid() -> list[list[int]]:
     return [_populate_cells() for _ in range(10)]
 
 
-def _get_coordinates_grid(grid):
-    grid_coord = list()
-    for i in range(HORI):
-        for j in range(VERT):
-            if grid[i][j] == 0:
-                continue
-            grid_coord.append((i, j))
-    return grid_coord
+def _get_coordinates_grid(grid: list[list[int]]) -> list[tuple[int, int]]:
+    return [(i, j) for i in range(HORI) for j in range(VERT) if grid[i][j] != 0]
 
 
-def _find_nodes(y, x, grid_coord, visited, coords=list(), special=list()):
+def _find_nodes(
+    y: int,
+    x: int,
+    grid_coord: list[tuple[int, int]],
+    visited: set[tuple[int, int]],
+    coords: list[tuple[int, int]] = list(),  # noqa: B006
+    special: list[tuple[int, int]] = list(),  # noqa: B006
+) -> tuple[list[tuple[int, int]], set[tuple[int, int]]]:
     if 0 <= y < VERT and (y - 1, x) in grid_coord and (y - 1, x) not in visited:
         if (y, x) not in special:
             special.append((y, x))
@@ -67,28 +67,20 @@ def largest_cluster(grid: list[list[int]]) -> int:
         visited.add(node)
         y, x = node
         coords, visited = _find_nodes(y, x, grid_coord, visited, coords)
-        print(f"{coords=}")
         grids.append(coords)
 
-    grids = [set(grida) for grida in grids]
+    grids_filtered: list[set[tuple[int, int]]] = [set(_) for _ in grids]
     grids.sort(key=len, reverse=True)
+
     try:
-        grid_size = len(grids[0])
+        return len(grids_filtered[0])
     except IndexError:
-        print(f"The grid had no decorations {grid=}")
+        print(f"The grid had no decorations {grids_filtered=}")
         return 0
-    return grid_size
 
 
 if __name__ == "__main__":
-    grid = [[1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-           [1, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-           [1, 0, 1, 0, 1, 0, 1, 0, 0, 0],
-           [1, 1, 1, 0, 1, 0, 1, 0, 0, 0],
-           [1, 0, 0, 0, 1, 1, 1, 0, 0, 0],
-           [1, 0, 0, 0, 1, 1, 1, 1, 0, 0],
-           [0, 0, 0, 0, 1, 0, 1, 0, 0, 0],
-           [0, 0, 0, 0, 1, 0, 1, 1, 0, 0],
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    grid = _create_grid()
+    for g in grid:
+        print(g)
     print(largest_cluster(grid))
