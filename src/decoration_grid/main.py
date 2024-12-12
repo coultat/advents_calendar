@@ -1,25 +1,19 @@
-from random import randint
+from random import SystemRandom
 
-VERT = 4
-HORI = 4
+VERT = 10
+HORI = 10
 
 
 def _populate_cells() -> list[int]:
-    return [randint(0, 1) for i in range(HORI)]  # noqa S311
+    return [SystemRandom().randint(0, 1) for _ in range(10)]
 
 
 def _create_grid() -> list[list[int]]:
-    return [_populate_cells() for i in range(VERT)]
+    return [_populate_cells() for _ in range(10)]
 
 
 def _get_coordinates_grid(grid: list[list[int]]) -> list[tuple[int, int]]:
-    grid_coord = []
-    for i in range(HORI):
-        for j in range(VERT):
-            if grid[i][j] == 0:
-                continue
-            grid_coord.append((i, j))
-    return grid_coord
+    return [(i, j) for i in range(HORI) for j in range(VERT) if grid[i][j] != 0]
 
 
 def _find_nodes(
@@ -27,8 +21,8 @@ def _find_nodes(
     x: int,
     grid_coord: list[tuple[int, int]],
     visited: set[tuple[int, int]],
-    coords: list[tuple[int, int]] = [],  # noqa B006
-    special: list[tuple[int, int]] = [],  # noqa B006
+    coords: list[tuple[int, int]] = [],  # noqa: B006
+    special: list[tuple[int, int]] = [],  # noqa: B006
 ) -> tuple[list[tuple[int, int]], set[tuple[int, int]]]:
     if 0 <= y < VERT and (y - 1, x) in grid_coord and (y - 1, x) not in visited:
         if (y, x) not in special:
@@ -38,7 +32,7 @@ def _find_nodes(
         coords, visited = _find_nodes(y - 1, x, grid_coord, visited, coords, special)
 
     elif 0 <= x < HORI and (y, x + 1) in grid_coord and (y, x + 1) not in visited:
-        if (y, x + 1) not in special:
+        if (y, x) not in special:
             special.append((y, x))
         visited.add((y, x + 1))
         coords.append((y, x + 1))
@@ -51,7 +45,7 @@ def _find_nodes(
         coords.append((y, x - 1))
         coords, visited = _find_nodes(y, x - 1, grid_coord, visited, coords, special)
 
-    elif 0 <= x < 10 and (y + 1, x) in grid_coord and (y + 1, x) not in visited:
+    elif 0 <= y < VERT and (y + 1, x) in grid_coord and (y + 1, x) not in visited:
         if (y, x) not in special:
             special.append((y, x))
         visited.add((y + 1, x))
@@ -66,6 +60,7 @@ def _find_nodes(
 
 def largest_cluster(grid: list[list[int]]) -> int:
     grid_coord = _get_coordinates_grid(grid)
+    print(f"{grid_coord=}")
     visited = set()
     grids = []
     for node in grid_coord:
@@ -75,14 +70,14 @@ def largest_cluster(grid: list[list[int]]) -> int:
         coords, visited = _find_nodes(y, x, grid_coord, visited, coords)
         grids.append(coords)
 
-    grids = [set(grida) for grida in grids]
-    grids.sort(key=len, reverse=True)
+    grids_filtered: list[set[tuple[int, int]]] = [set(_) for _ in grids]
+    grids_filtered.sort(key=len, reverse=True)
+
     try:
-        grid_size = len(grids[0])
+        return len(grids_filtered[0])
     except IndexError:
-        print(f"The grid had no decorations {grid=}")
+        print(f"The grid had no decorations {grids_filtered=}")
         return 0
-    return grid_size
 
 
 if __name__ == "__main__":
