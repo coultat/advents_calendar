@@ -21,8 +21,8 @@ def _find_nodes(
     x: int,
     grid_coord: list[tuple[int, int]],
     visited: set[tuple[int, int]],
-    coords: list[tuple[int, int]] = list(),  # noqa: B006
-    special: list[tuple[int, int]] = list(),  # noqa: B006
+    coords: list[tuple[int, int]] = [],  # noqa: B006
+    special: list[tuple[int, int]] = [],  # noqa: B006
 ) -> tuple[list[tuple[int, int]], set[tuple[int, int]]]:
     if 0 <= y < VERT and (y - 1, x) in grid_coord and (y - 1, x) not in visited:
         if (y, x) not in special:
@@ -60,6 +60,7 @@ def _find_nodes(
 
 def largest_cluster(grid: list[list[int]]) -> int:
     grid_coord = _get_coordinates_grid(grid)
+    print(f"{grid_coord=}")
     visited = set()
     grids = []
     for node in grid_coord:
@@ -70,7 +71,7 @@ def largest_cluster(grid: list[list[int]]) -> int:
         grids.append(coords)
 
     grids_filtered: list[set[tuple[int, int]]] = [set(_) for _ in grids]
-    grids.sort(key=len, reverse=True)
+    grids_filtered.sort(key=len, reverse=True)
 
     try:
         return len(grids_filtered[0])
@@ -81,6 +82,4 @@ def largest_cluster(grid: list[list[int]]) -> int:
 
 if __name__ == "__main__":
     grid = _create_grid()
-    for g in grid:
-        print(g)
     print(largest_cluster(grid))
