@@ -60,7 +60,6 @@ def _find_nodes(
 
 def largest_cluster(grid: list[list[int]]) -> int:
     grid_coord = _get_coordinates_grid(grid)
-    print(f"{grid_coord=}")
     visited = set()
     grids = []
     for node in grid_coord:
