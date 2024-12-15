@@ -39,6 +39,10 @@ def test_grid_9() -> list[list[int]]:
 
 
 @pytest.fixture
+def test_grid_1_cell() -> list[list[int]]:
+    return [[1]]
+
+@pytest.fixture
 def test_grid_0() -> list[list[int]]:
     return [[0, 0], [0, 0]]
 

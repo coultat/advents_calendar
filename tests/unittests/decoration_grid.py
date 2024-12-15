@@ -87,3 +87,14 @@ def test_grid_single_column(test_single_column):  # type: ignore
 
     # Then the result must match
     assert expected_result == result
+
+
+def test_single_cell(test_grid_1_cell): # type: ignore
+    # Given the expected result and the test_grid
+    expected_result = 1
+
+    # When finding the biggest cluster
+    result = largest_cluster(test_grid_1_cell)
+
+    # Then the expected result must match
+    assert result == expected_result
