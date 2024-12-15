@@ -13,7 +13,9 @@ def _create_grid() -> list[list[int]]:
 
 
 def _get_coordinates_grid(grid: list[list[int]]) -> list[tuple[int, int]]:
-    return [(i, j) for i in range(HORI) for j in range(VERT) if grid[i][j] != 0]
+    len_hor = len(grid[0])
+    len_ver = len(grid)
+    return [(i, j) for i in range(len_ver) for j in range(len_hor) if grid[i][j] != 0]
 
 
 def _find_nodes(
