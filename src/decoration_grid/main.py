@@ -13,7 +13,9 @@ def _create_grid() -> list[list[int]]:
 
 
 def _get_coordinates_grid(grid: list[list[int]]) -> list[tuple[int, int]]:
-    return [(i, j) for i in range(HORI) for j in range(VERT) if grid[i][j] != 0]
+    len_hor = len(grid[0])
+    len_ver = len(grid)
+    return [(i, j) for i in range(len_ver) for j in range(len_hor) if grid[i][j] != 0]
 
 
 def _find_nodes(
@@ -60,7 +62,6 @@ def _find_nodes(
 
 def largest_cluster(grid: list[list[int]]) -> int:
     grid_coord = _get_coordinates_grid(grid)
-    print(f"{grid_coord=}")
     visited = set()
     grids = []
     for node in grid_coord:
