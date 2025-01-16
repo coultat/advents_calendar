@@ -1,5 +1,8 @@
 from random import SystemRandom
+import logging
 
+
+logging.basicConfig(level=logging.NOTSET)
 VERT = 10
 HORI = 10
 
